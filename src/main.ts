@@ -1,5 +1,6 @@
 import './styles.css';
 import { calculateResults, type CompetitorResult } from './calculateResults';
+import DOMPurify from 'dompurify';
 
 // State management
 class AppState {
@@ -24,6 +25,11 @@ class AppState {
 }
 
 const state = new AppState();
+
+// Utility function to sanitize user input and prevent XSS
+function sanitize(dirty: string): string {
+  return DOMPurify.sanitize(dirty, { ALLOWED_TAGS: [] });
+}
 
 // Utility function for ordinal suffix
 function ordinalSuffix(i: number): string {
@@ -115,7 +121,7 @@ function renderRankingsInput(): void {
       formHTML += `
         <div>
           <label>
-            ${state.competitors[competitorIndex]} Rank:
+            ${sanitize(state.competitors[competitorIndex])} Rank:
             <input
               type="number"
               class="ranking-input"
@@ -187,7 +193,7 @@ function renderResults(): void {
 
   // Result rows
   state.results.forEach(result => {
-    tableHTML += `<tr><td>${result.competitor}</td>`;
+    tableHTML += `<tr><td>${sanitize(result.competitor)}</td>`;
 
     // Scores
     result.scores.forEach(score => {

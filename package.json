@@ -10,9 +10,12 @@
     "preview": "vite preview",
     "test": "jest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "dompurify": "^3.3.1"
+  },
   "devDependencies": {
     "@eslint/js": "^9.9.0",
+    "@types/dompurify": "^3.0.5",
     "@types/jest": "^29.5.13",
     "eslint": "^9.9.0",
     "globals": "^15.9.0",
