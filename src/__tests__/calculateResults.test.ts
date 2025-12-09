@@ -1,7 +1,5 @@
 // src/__tests__/calculateResults.test.ts
-import RankingsInput from '../components/RankingsInput';
-
-const calculateResults = RankingsInput.prototype.calculateResults
+import { calculateResults } from '../calculateResults';
 
 describe('calculateResults', () => {
   test('Basic scenario with clear majority', () => {
