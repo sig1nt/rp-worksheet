@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <!-- Ribbon -->
+  <path d="M12 2 L12 12 L16 10 L20 12 L20 2 Z" fill="#C41E3A" stroke="#8B0000" stroke-width="0.5"/>
+
+  <!-- Medal circle -->
+  <circle cx="16" cy="20" r="10" fill="#FFD700" stroke="#DAA520" stroke-width="1"/>
+
+  <!-- Inner circle -->
+  <circle cx="16" cy="20" r="8" fill="#FFF8DC" stroke="#DAA520" stroke-width="0.5"/>
+
+  <!-- "1st" text -->
+  <text x="16" y="23" font-family="Arial, sans-serif" font-size="8" font-weight="bold" fill="#DAA520" text-anchor="middle">1st</text>
+</svg>
