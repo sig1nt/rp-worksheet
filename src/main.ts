@@ -186,7 +186,8 @@ function renderResults(): void {
 
   // Cumulative count columns
   for (let i = 0; i < maxPlace; i++) {
-    tableHTML += `<th>1-${i + 1}</th>`;
+    const dividerClass = i === 0 ? ' class="rp-divider"' : '';
+    tableHTML += `<th${dividerClass}>1-${i + 1}</th>`;
   }
 
   tableHTML += '<th>Place</th></tr></thead><tbody>';
@@ -203,7 +204,10 @@ function renderResults(): void {
     // Cumulative counts
     result.cumulativeCounts.forEach((cumulativeCount, idx) => {
       const isHighlighted = result.highlightPlace !== null && idx === result.highlightPlace;
-      const className = isHighlighted ? ' class="highlight"' : '';
+      const classes: string[] = [];
+      if (idx === 0) classes.push('rp-divider');
+      if (isHighlighted) classes.push('highlight');
+      const className = classes.length > 0 ? ` class="${classes.join(' ')}"` : '';
       const sumText = isHighlighted ? ` (${result.sumOfScoresAtMajority})` : '';
       tableHTML += `<td${className}>${cumulativeCount}${sumText}</td>`;
     });
