@@ -91,7 +91,7 @@ function renderError(): void {
 
   app.innerHTML = `
     <h1>Relative Placement Scoring System</h1>
-    <p>Invalid or missing data. <a href="/">Go back to enter scores.</a></p>
+    <p>Invalid or missing data. <a href="/index.html">Go back to enter scores.</a></p>
   `;
 }
 
