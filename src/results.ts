@@ -12,7 +12,7 @@ function parseQueryParams(): { competitors: string[]; rankings: number[][] } | n
   if (competitors.length === 0) return null;
 
   const rankings: number[][] = [];
-  let judgeIndex = 0;
+  let judgeIndex = 1;
   while (params.has(`j${judgeIndex}`)) {
     const judgeRanks = params.get(`j${judgeIndex}`)!.split(',').map(Number);
     if (judgeRanks.length !== competitors.length || judgeRanks.some(isNaN)) {

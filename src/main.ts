@@ -148,7 +148,7 @@ function navigateToResults(): void {
   params.set('competitors', state.competitors.map(encodeURIComponent).join(','));
 
   for (let i = 0; i < state.rankings.length; i++) {
-    params.set(`j${i}`, state.rankings[i].join(','));
+    params.set(`j${i + 1}`, state.rankings[i].join(','));
   }
 
   window.location.href = `/results.html?${params.toString()}`;
