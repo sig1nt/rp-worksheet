@@ -1,45 +1,26 @@
 import './styles.css';
-import { calculateResults, type CompetitorResult } from './calculateResults';
-import DOMPurify from 'dompurify';
+import { sanitize } from './utils';
 
 // State management
 class AppState {
   competitors: string[];
   numJudges: number | null;
-  results: CompetitorResult[] | null;
   rankings: number[][];
 
   constructor() {
     this.competitors = [];
     this.numJudges = null;
-    this.results = null;
     this.rankings = [];
   }
 
   reset(): void {
     this.competitors = [];
     this.numJudges = null;
-    this.results = null;
     this.rankings = [];
   }
 }
 
 const state = new AppState();
-
-// Utility function to sanitize user input and prevent XSS
-function sanitize(dirty: string): string {
-  return DOMPurify.sanitize(dirty, { ALLOWED_TAGS: [] });
-}
-
-// Utility function for ordinal suffix
-function ordinalSuffix(i: number): string {
-  const j = i % 10;
-  const k = i % 100;
-  if (j === 1 && k !== 11) return i + 'st';
-  if (j === 2 && k !== 12) return i + 'nd';
-  if (j === 3 && k !== 13) return i + 'rd';
-  return i + 'th';
-}
 
 // Setup Form Component
 function renderSetupForm(): void {
@@ -157,66 +138,20 @@ function renderRankingsInput(): void {
   const form = document.getElementById('rankings-form') as HTMLFormElement;
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    state.results = calculateResults(state.rankings, state.competitors);
-    renderResults();
+    navigateToResults();
   });
 }
 
-// Results Component
-function renderResults(): void {
-  const app = document.getElementById('app');
-  if (!app || !state.results || state.numJudges === null) return;
+// Build query params and navigate to results page
+function navigateToResults(): void {
+  const params = new URLSearchParams();
+  params.set('competitors', state.competitors.map(encodeURIComponent).join(','));
 
-  const maxPlace = state.results.length;
-
-  let tableHTML = `
-    <h1>Relative Placement Scoring System</h1>
-    <div>
-      <h2>Final Results</h2>
-      <table border="1" cellpadding="5" style="margin: 0 auto; border-collapse: collapse;">
-        <thead>
-          <tr>
-            <th>Competitor</th>
-  `;
-
-  // Judge columns
-  for (let i = 0; i < state.numJudges; i++) {
-    tableHTML += `<th>J${i + 1}</th>`;
+  for (let i = 0; i < state.rankings.length; i++) {
+    params.set(`j${i + 1}`, state.rankings[i].join(','));
   }
 
-  // Cumulative count columns
-  for (let i = 0; i < maxPlace; i++) {
-    const dividerClass = i === 0 ? ' class="rp-divider"' : '';
-    tableHTML += `<th${dividerClass}>1-${i + 1}</th>`;
-  }
-
-  tableHTML += '<th>Place</th></tr></thead><tbody>';
-
-  // Result rows
-  state.results.forEach(result => {
-    tableHTML += `<tr><td>${sanitize(result.competitor)}</td>`;
-
-    // Scores
-    result.scores.forEach(score => {
-      tableHTML += `<td>${score}</td>`;
-    });
-
-    // Cumulative counts
-    result.cumulativeCounts.forEach((cumulativeCount, idx) => {
-      const isHighlighted = result.highlightPlace !== null && idx === result.highlightPlace;
-      const classes: string[] = [];
-      if (idx === 0) classes.push('rp-divider');
-      if (isHighlighted) classes.push('highlight');
-      const className = classes.length > 0 ? ` class="${classes.join(' ')}"` : '';
-      const sumText = isHighlighted ? ` (${result.sumOfScoresAtMajority})` : '';
-      tableHTML += `<td${className}>${cumulativeCount}${sumText}</td>`;
-    });
-
-    tableHTML += `<td>${ordinalSuffix(result.place)}</td></tr>`;
-  });
-
-  tableHTML += '</tbody></table></div>';
-  app.innerHTML = tableHTML;
+  window.location.href = `/results.html?${params.toString()}`;
 }
 
 // Initialize the app
