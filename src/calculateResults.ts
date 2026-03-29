@@ -1,3 +1,5 @@
+// Add a test
+
 // Type definitions
 export interface CompetitorResult {
   competitor: string;
